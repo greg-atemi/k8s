@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification
+  namespace: oldmutual
+  labels:
+    app: notification
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification
+  template:
+    metadata:
+      labels:
+        app: notification
+    spec:
+      volumes:
+        - name: notification-volume
+          persistentVolumeClaim:
+            claimName: notification-pvc
+      containers:
+        - name: notification
+          image: registry.gitlab.com/systechlimited/fm/notificationsservice:latest
+          volumeMounts:
+            - mountPath: "/notification/files"
+              name: notification-volume
+          imagePullPolicy: Always
+          env:
+            - name: HIBERNATE_DIALECT
+              value: "org.hibernate.dialect.PostgresPlusDialect"
+            - name: DATABASE_DRIVER_CLASS
+              value: "org.postgresql.Driver"
+            - name: KAFKA_URL
+              value: "kafka.oldmutual.svc.cluster.local:2255"
+            - name: FILES_DIR
+              value: "/notifications/files"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: notification-secret
+                  key: DATABASE_URL
+            - name: DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: notification-secret
+                  key: DATABASE_USERNAME
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: notification-secret
+                  key: DATABASE_PASSWORD
+          ports:
+            - containerPort: 8081

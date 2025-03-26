@@ -49,12 +49,12 @@ spec:
                 secretKeyRef:
                   name: mss-secret
                   key: DATABASE_PASSWORD
-            - name: WILDFLY_USER
+            - name: WILDFLY_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: mss-secret
                   key: WILDFLY_USERNAME
-            - name: WILDFLY_PASS
+            - name: WILDFLY_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: mss-secret
