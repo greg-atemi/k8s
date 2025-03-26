@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: xc-application-service
+  namespace: oldmutual
+spec:
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30000
+  selector:
+    app: xc
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: xc-oldmutual-management-service
+  namespace: oldmutual
+spec:
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 9080
+      targetPort: 9990
+      nodePort: 30001
+  selector:
+    app: xc
