@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mss
+  namespace: oldmutual
+  labels:
+    app: mss
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mss
+  template:
+    metadata:
+      name: mss
+      labels:
+        app: mss
+    spec:
+      volumes:
+        - name: mss-volume
+          persistentVolumeClaim:
+            claimName: mss-pvc
+      containers:
+        - name: mss-oldmutual
+          image: registry.gitlab.com/systechlimited/fm/mssvisionjava/mss-oldmutual:latest
+          volumeMounts:
+            - mountPath: "/opt/jboss/mssuploads"
+              name: mss-volume
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+            - containerPort: 9990
+              protocol: TCP
+          command: ["/bin/sh", "/opt/jboss/wildfly/configure_wildfly.sh"]
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: mss-secret
+                  key: DATABASE_URL
+            - name: DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mss-secret
+                  key: DATABASE_USERNAME
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mss-secret
+                  key: DATABASE_PASSWORD
+            - name: WILDFLY_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mss-secret
+                  key: WILDFLY_USERNAME
+            - name: WILDFLY_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: mss-secret
+                  key: WILDFLY_PASSWORD
+      restartPolicy: Always
