@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: schedulers
+  namespace: schedulers
   labels:
     app: schedulers
 spec:
@@ -16,21 +17,22 @@ spec:
     spec:
       containers:
         - name: schedulers
-          image: registry.gitlab.com/systechlimited/fm/xe/xc-schedulers:latest
+          image: fundmasterstagingacr.azurecr.io/xc-schedulers:vtest_27_03_2025__15_20_21
           imagePullPolicy: Always
           command:
             - "/bin/sh"
             - "/opt/jboss/wildfly/configure_wildfly.sh"
           env:
             - name: WILDFLY_USERNAME
-              value: "{{ $deployment.environment.WILDFLY_USERNAME }}"
+              value: "admin"
             - name: WILDFLY_PASSWORD
-              value: "{{ $deployment.environment.WILDFLY_PASSWORD }}"
+              value: "Admin@123"
             - name: DATABASE_URL
-              value: "{{ $deployment.environment.DATABASE_URL }}"
+              value: "jdbc:postgresql://fundmaster-xe-staging.postgres.database.azure.com:5432/fundmaster_xe_staging_ke"
             - name: DATABASE_USERNAME
-              value: "{{ $deployment.environment.DATABASE_USERNAME }}"
+              value: "fundxestaging_adm_user"
             - name: DATABASE_PASSWORD
-              value: "{{ $deployment.environment.DATABASE_PASSWORD }}"
+              value: "Hu6Z74aiMS#2420UnoD"
           ports:
             - containerPort: 8080
+            - containerPort: 9990
