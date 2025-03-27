@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: schedulers
+  labels:
+    app: schedulers
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: schedulers
+  template:
+    metadata:
+      labels:
+        app: schedulers
+    spec:
+      containers:
+        - name: schedulers
+          image: registry.gitlab.com/systechlimited/fm/xe/xc-schedulers:latest
+          imagePullPolicy: Always
+          command:
+            - "/bin/sh"
+            - "/opt/jboss/wildfly/configure_wildfly.sh"
+          env:
+            - name: WILDFLY_USERNAME
+              value: "{{ $deployment.environment.WILDFLY_USERNAME }}"
+            - name: WILDFLY_PASSWORD
+              value: "{{ $deployment.environment.WILDFLY_PASSWORD }}"
+            - name: DATABASE_URL
+              value: "{{ $deployment.environment.DATABASE_URL }}"
+            - name: DATABASE_USERNAME
+              value: "{{ $deployment.environment.DATABASE_USERNAME }}"
+            - name: DATABASE_PASSWORD
+              value: "{{ $deployment.environment.DATABASE_PASSWORD }}"
+          ports:
+            - containerPort: 8080
