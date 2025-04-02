@@ -25,7 +25,7 @@ spec:
             - name: DATABASE_DRIVER_CLASS
               value: "org.postgresql.Driver"
             - name: CLIENT
-              value: "oldmutual"
+              value: "oldmutualug"
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
