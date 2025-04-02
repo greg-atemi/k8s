@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workflow
+  namespace: oldmutual
+  labels:
+    app: workflow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: workflow
+  template:
+    metadata:
+      labels:
+        app: workflow
+    spec:
+      containers:
+        - name: workflow
+          image: registry.gitlab.com/systechlimited/fm/workflowxcservice:latest
+          imagePullPolicy: Always
+          env:
+            - name: HIBERNATE_DIALECT
+              value: "org.hibernate.dialect.PostgresPlusDialect"
+            - name: DATABASE_DRIVER_CLASS
+              value: "org.postgresql.Driver"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: workflow-secret
+                  key: DATABASE_URL
+            - name: DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: workflow-secret
+                  key: DATABASE_USERNAME
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: workflow-secret
+                  key: DATABASE_PASSWORD
+          ports:
+            - containerPort: 8081
