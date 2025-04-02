@@ -29,17 +29,17 @@ spec:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: notification-secret
+                  name: reporting-service-secret
                   key: DATABASE_URL
             - name: DATABASE_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: notification-secret
+                  name: reporting-service-secret
                   key: DATABASE_USERNAME
             - name: DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: notification-secret
+                  name: reporting-service-secret
                   key: DATABASE_PASSWORD
           ports:
             - containerPort: 8081
