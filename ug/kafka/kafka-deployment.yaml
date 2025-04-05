@@ -16,6 +16,7 @@ spec:
       labels:
         app: kafka
     spec:
+      hostname: broker
       containers:
         - name: kafka
           image: apache/kafka:4.0.0
